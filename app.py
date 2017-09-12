@@ -59,12 +59,13 @@ def graph():
             script, div = components(p)
 
         except:
-            print('input ticker maybe wrong')
+            return 'input ticker maybe wrong'
 
         # if no field is chosen, simply return an error message
         if not request.form.get('feature1') and not request.form.get('feature2') and \
                 not request.form.get('feature3') and not request.form.get('feature4'):
             return "Please select at least one value to plot!"
+
         # otherwise return the plot
         return render_template('graph.html', div=div, script=script)
 
