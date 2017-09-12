@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -30,28 +31,29 @@ def graph():
 
         y = [datetime.strptime(x, '%Y-%m-%d') for x in list(data['Date'])]
 
+
         p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
                    x_axis_type="datetime")
 
         # only plot if a feature is selected
         if request.form.get('feature1'):
           feature1 = request.form['feature1']
-          x1 = last_mon_data[feature1]
+          x1 = data[feature1]
           p.line(y, x1.values, legend="{}".format(feature1), line_width=2, color="green")
 
         if request.form.get('feature2'):
           feature2 = request.form['feature2']
-          x2 = last_mon_data[feature2]
+          x2 = data[feature2]
           p.line(y, x2.values, legend="{}".format(feature2), line_width=2, color="red")
 
         if request.form.get('feature3'):
           feature3 = request.form['feature3']
-          x3 = last_mon_data[feature3]
+          x3 = data[feature3]
           p.line(y, x3.values, legend="{}".format(feature3), line_width=2, color="blue")
 
         if request.form.get('feature4'):
           feature4 = request.form['feature4']
-          x4 = last_mon_data[feature4]
+          x4 = data[feature4]
           p.line(y, x4.values, legend="{}".format(feature4), line_width=2, color="orange")
 
         script, div = components(p)
