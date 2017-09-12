@@ -24,7 +24,7 @@ def graph():
         session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
         raw_data = session.get(api_url)
         txt = raw_data.json()
-        col = txt['column_names']
+        col = txt[list(txt.keys())[13]]
         data_raw = txt['data']
         data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
 
