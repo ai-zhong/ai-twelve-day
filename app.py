@@ -24,38 +24,42 @@ def graph():
         session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
         raw_data = session.get(api_url)
         txt = raw_data.json()
-        col = txt[list(txt.keys())[13]]
-        data_raw = txt['data']
-        data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
+        try:
+            col = txt['column_names']
+            data_raw = txt['data']
+            data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
 
-        dates = np.array(data['Date'], dtype=np.datetime64)
-        # y = list(dates)
-        y = range(len(dates))
-        p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
+            dates = np.array(data['Date'], dtype=np.datetime64)
+            y = list(dates)
+            # y = range(len(dates))
+            p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
                    x_axis_type="datetime")
 
-        # only plot if a feature is selected
-        if request.form.get('feature1'):
-            feature1 = request.form['feature1']
-            x1 = data[feature1]
-            p.line(y, x1.values, legend="{}".format(feature1), line_width=1, color="green")
+            # only plot if a feature is selected
+            if request.form.get('feature1'):
+                feature1 = request.form['feature1']
+                x1 = data[feature1]
+                p.line(y, x1.values, legend="{}".format(feature1), line_width=1, color="green")
 
-        if request.form.get('feature2'):
-            feature2 = request.form['feature2']
-            x2 = data[feature2]
-            p.line(y, x2.values, legend="{}".format(feature2), line_width=1, color="red")
+            if request.form.get('feature2'):
+                feature2 = request.form['feature2']
+                x2 = data[feature2]
+                p.line(y, x2.values, legend="{}".format(feature2), line_width=1, color="red")
 
-        if request.form.get('feature3'):
-            feature3 = request.form['feature3']
-            x3 = data[feature3]
-            p.line(y, x3.values, legend="{}".format(feature3), line_width=1, color="blue")
+            if request.form.get('feature3'):
+                feature3 = request.form['feature3']
+                x3 = data[feature3]
+                p.line(y, x3.values, legend="{}".format(feature3), line_width=1, color="blue")
 
-        if request.form.get('feature4'):
-            feature4 = request.form['feature4']
-            x4 = data[feature4]
-            p.line(y, x4.values, legend="{}".format(feature4), line_width=1, color="orange")
+            if request.form.get('feature4'):
+                feature4 = request.form['feature4']
+                x4 = data[feature4]
+                p.line(y, x4.values, legend="{}".format(feature4), line_width=1, color="orange")
 
-        script, div = components(p)
+            script, div = components(p)
+
+        except:
+            print('input ticker maybe wrong')
 
         # if no field is chosen, simply return an error message
         if not request.form.get('feature1') and not request.form.get('feature2') and \
