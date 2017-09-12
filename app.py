@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import flask
-import quandl
+import Quandl
 import pandas as pd
 import numpy as np
 from datetime import timedelta
@@ -24,8 +24,8 @@ def graph():
       ticker = request.form['ticker']
 
       # get data from quandl API
-      quandl.ApiConfig.api_key = "DotxFs2bJksfE6SfssR4"
-      data = quandl.get("WIKI/{}".format(ticker))[['Open', 'Close', 'Adj. Open', 'Adj. Close']]
+      Quandl.ApiConfig.api_key = "DotxFs2bJksfE6SfssR4"
+      data = Quandl.get("WIKI/{}".format(ticker))[['Open', 'Close', 'Adj. Open', 'Adj. Close']]
       # clean the data for plotting
       today = pd.to_datetime('today')
       last_mon = today - timedelta(days=30)
