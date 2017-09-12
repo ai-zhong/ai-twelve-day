@@ -1,13 +1,9 @@
 from flask import Flask, render_template, request, redirect
-import flask
-import Quandl
 import pandas as pd
 import numpy as np
-from datetime import timedelta
+from datetime import datetime
 from bokeh.plotting import figure, output_file, show
 from bokeh.embed import components
-from bokeh.resources import INLINE
-from bokeh.util.string import encode_utf8
 
 app = Flask(__name__)
 
@@ -17,21 +13,22 @@ def index():
 
 @app.route('/graph', methods = ['POST'])
 def graph():
-
-
+    
     # only proceed to get and plot data is ticker is given
     if request.form.get('ticker'):
-      ticker = request.form['ticker']
+        ticker = request.form['ticker']
 
       # get data from quandl API
-      Quandl.ApiConfig.api_key = "DotxFs2bJksfE6SfssR4"
-      data = Quandl.get("WIKI/{}".format(ticker))[['Open', 'Close', 'Adj. Open', 'Adj. Close']]
-      # clean the data for plotting
-      today = pd.to_datetime('today')
-      last_mon = today - timedelta(days=30)
-      index1 = (np.where(data.index > last_mon)[0])
-      last_mon_data = data[index1[0]:]
-      y = pd.to_datetime(last_mon_data.index)
+      api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/{}.json'.format(ticker)
+      session = requests.Session()
+      session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
+      raw_data = session.get(api_url)
+      txt = raw_data.json()
+      col = txt['column_names']
+      data_raw = txt['data']
+      data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
+      
+      y = [datetime.strptime(x, '%Y-%m-%d') for x in list(data['Date'])]
 
 
       p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
