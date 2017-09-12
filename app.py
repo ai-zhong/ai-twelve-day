@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect
 import requests
 import pandas as pd
 import numpy as np
-from datetime import datetime
 from bokeh.plotting import figure, output_file, show
 from bokeh.embed import components
 
@@ -29,7 +28,8 @@ def graph():
         data_raw = txt['data']
         data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
 
-        y = [datetime.strptime(x, '%Y-%m-%d') for x in list(data['Date'])]
+        dates = np.array(data['Date'], dtype=np.datetime64)
+        y = list(dates)
 
 
         p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
