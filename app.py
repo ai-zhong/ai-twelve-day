@@ -29,7 +29,8 @@ def graph():
         data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
 
         dates = np.array(data['Date'], dtype=np.datetime64)
-        y = list(dates)
+        # y = list(dates)
+        y = range(len(dates))
         p = figure(title="Stock Price Plot for Last Month {}".format(ticker), x_axis_label='Date', y_axis_label='Price',
                    x_axis_type="datetime")
 
