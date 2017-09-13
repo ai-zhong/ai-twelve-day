@@ -28,6 +28,7 @@ def graph():
             col = txt['column_names']
             data_raw = txt['data']
             data = pd.DataFrame(data=data_raw, columns=col)[['Date', 'Close','Adj. Close','Open','Adj. Open']]
+            data = data.sort_values("Date", ascending=False).iloc[0:30,:]
 
             dates = np.array(data['Date'], dtype=np.datetime64)
             y = list(dates)
