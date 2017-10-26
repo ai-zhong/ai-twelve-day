@@ -19,7 +19,7 @@ def graph():
         ticker = request.form['ticker']
 
         # get data from quandl API
-        api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/{}.json?api_key=DotxFs2bJksfE6SfssR4'.format(ticker)
+        api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/{}.json?qopts.columns=date,close,adj_close,open,adj_open&api_key=DotxFs2bJksfE6SfssR4'.format(ticker)
         session = requests.Session()
         session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
         raw_data = session.get(api_url)
